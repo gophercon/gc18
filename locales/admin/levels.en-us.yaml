@@ -1,0 +1,6 @@
+- id: "levels.created.success"
+  translation: "Level was successfully created."
+- id: "levels.updated.success"
+  translation: "Level was successfully updated."
+- id: "levels.destroyed.success"
+  translation: "Level was successfully destroyed."

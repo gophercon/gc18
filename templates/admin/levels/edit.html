@@ -1,0 +1,6 @@
+<h1>Edit Level</h1>
+
+<%= form_for(level, {action: adminLevelPath({ admin_level_id: level.ID }), method: "PUT"}) { %>
+  <%= partial("admin/levels/form.html") %>
+  <a href="<%= adminLevelsPath({ level_id: level.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

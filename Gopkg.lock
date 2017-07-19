@@ -1,4 +1,4 @@
-memo = "2dde9be723352c80fc88751214cc5ee6477d6912d6595cb7d0dc6e85362184d7"
+memo = "251d0029afb5927b09ae8dd6e8112d25a699a2692f33fe2f0de7847e28c35f14"
 
 [[projects]]
   branch = "master"
@@ -80,6 +80,12 @@ memo = "2dde9be723352c80fc88751214cc5ee6477d6912d6595cb7d0dc6e85362184d7"
 
 [[projects]]
   branch = "master"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  revision = "0a4f71a498b7c4812f64969510bcb4eca251e33a"
+
+[[projects]]
+  branch = "master"
   name = "github.com/gorilla/context"
   packages = ["."]
   revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
@@ -125,6 +131,12 @@ memo = "2dde9be723352c80fc88751214cc5ee6477d6912d6595cb7d0dc6e85362184d7"
   name = "github.com/markbates/going"
   packages = ["defaults","randx","wait"]
   revision = "0576708c56cea02331f864fe6e157ac7841923e4"
+
+[[projects]]
+  name = "github.com/markbates/goth"
+  packages = [".","gothic","providers/github","providers/twitter"]
+  revision = "488a04ae13f57b10e55e1a32c8cd62f9cc66c671"
+  version = "v1.38.0"
 
 [[projects]]
   branch = "master"
@@ -209,6 +221,12 @@ memo = "2dde9be723352c80fc88751214cc5ee6477d6912d6595cb7d0dc6e85362184d7"
   name = "github.com/monoculum/formam"
   packages = ["."]
   revision = "6292a2420ab5eeb9359e1e9d1feac69c34ddcbed"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mrjones/oauth"
+  packages = ["."]
+  revision = "3f67d9c274355678b2f9844b08d643e2f9213340"
 
 [[projects]]
   branch = "master"
@@ -333,14 +351,26 @@ memo = "2dde9be723352c80fc88751214cc5ee6477d6912d6595cb7d0dc6e85362184d7"
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context","html","html/atom"]
+  packages = ["context","context/ctxhttp","html","html/atom"]
   revision = "5d0d7096b5f2ef7ba83f319c07ef63989a1c6f91"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
+  packages = [".","internal"]
+  revision = "b53b38ad8a6435bd399ea76d0fa74f23149cca4e"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "cd2c276457edda6df7fb04895d3fd6a6add42926"
+
+[[projects]]
+  name = "google.golang.org/appengine"
+  packages = ["internal","internal/base","internal/datastore","internal/log","internal/remote_api","internal/urlfetch","urlfetch"]
+  revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "v2"
