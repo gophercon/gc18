@@ -1,0 +1,6 @@
+- id: "level_benefits.created.success"
+  translation: "LevelBenefit was successfully created."
+- id: "level_benefits.updated.success"
+  translation: "LevelBenefit was successfully updated."
+- id: "level_benefits.destroyed.success"
+  translation: "LevelBenefit was successfully destroyed."

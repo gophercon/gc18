@@ -1,0 +1,6 @@
+create_table("level_benefits", func(t) {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("level_id", "string", {})
+	t.Column("name", "string", {})
+	t.Column("description", "string", {})
+})

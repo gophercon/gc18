@@ -1,0 +1,17 @@
+<h1>LevelBenefit#Show</h1>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= adminLevelBenefitsPath() %>" class="btn btn-info">Back to all LevelBenefits</a></li>
+  <li><a href="<%= editAdminLevelBenefitPath({ admin_level_benefit_id: levelBenefit.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= adminLevelBenefitPath({ admin_level_benefit_id: levelBenefit.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>LevelID</strong>: <%= levelBenefit.LevelID %>
+</p>
+<p>
+  <strong>Name</strong>: <%= levelBenefit.Name %>
+</p>
+<p>
+  <strong>Description</strong>: <%= levelBenefit.Description %>
+</p>

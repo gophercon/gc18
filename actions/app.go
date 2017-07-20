@@ -63,6 +63,7 @@ func App() *buffalo.App {
 		auth.GET("/{provider}", buffalo.WrapHandlerFunc(gothic.BeginAuthHandler))
 		auth.GET("/{provider}/callback", AuthCallback)
 		app.Resource("/admin/levels", AdminLevelsResource{&buffalo.BaseResource{}})
+		app.Resource("/admin/level_benefits", AdminLevelBenefitsResource{&buffalo.BaseResource{}})
 	}
 
 	return app
