@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: default
+  name: website
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: website
+    spec:
+      containers:
+        - name: website
+          resources:
+            requests:
+              cpu: "20m"
+          image: bketelsen/gc18-gophercon:9
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 3000
+            name: website-port 
+        - name: jaeger-agent
+          image: jaegertracing/jaeger-agent
+          ports: 
+          - containerPort: 5775
+            protocol: UDP
+          - containerPort: 5778
+          - containerPort: 6831
+            protocol: UDP
+          - containerPort: 6832
+            protocol: UDP
+          command:
+          - "/go/bin/agent-linux"
+          - "--collector.host-port=jaeger-collector:14267"
+
+
+

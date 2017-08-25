@@ -1,0 +1,16 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: default
+  name: website
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+    - host: 2018.gophercon.com
+      http:
+        paths:
+          - backend:
+              serviceName: website
+              servicePort: 3000

@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+
+apiVersion: v1
+metadata:
+  name: consul
+  annotations:
+    volume.beta.kubernetes.io/storage-class: slow
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi

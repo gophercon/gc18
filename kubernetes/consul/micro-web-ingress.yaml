@@ -1,0 +1,16 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: default
+  name: test
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+    - host: test.gophercon.com
+      http:
+        paths:
+          - backend:
+              serviceName: micro-web
+              servicePort: 80

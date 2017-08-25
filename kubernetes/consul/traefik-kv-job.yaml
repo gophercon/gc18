@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: traefik-kv-job
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      name: traefik-kv-jobs
+    spec:
+      containers:
+        - image: containous/traefik:v1.1.2
+          name: traefik-ingress-lb
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: "/config"
+              name: "config"
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+            - containerPort: 8080
+          args:
+            - storeconfig
+            - --configfile=/config/traefik.toml
+      volumes:
+        - name: config
+          configMap:
+            name: traefik-conf
+      restartPolicy: Never
