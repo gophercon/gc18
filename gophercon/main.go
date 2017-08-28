@@ -17,7 +17,7 @@ import (
 
 // ServiceName is the string name of the service, since
 // it is used in multiple places, it's an exported Constant
-const ServiceName = "com.gophercon.web.buffalo"
+const ServiceName = "gophercon.web"
 
 func main() {
 

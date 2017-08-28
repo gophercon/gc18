@@ -15,7 +15,10 @@ spec:
           resources:
             requests:
               cpu: "20m"
-          image: bketelsen/gc18-gophercon:9
+          image: bketelsen/gc18-gophercon
+          env:
+            - name: GO_ENV
+              value: "production"
           imagePullPolicy: Always
           ports:
           - containerPort: 3000
