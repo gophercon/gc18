@@ -2,9 +2,7 @@
 set -e
 
 RG=gophercon
-LOC=southcentralus
-
+LOC=westus2
 
 az group create --name $RG --location $LOC
-
-az acs create --orchestrator-type kubernetes --resource-group $RG --name $RG --generate-ssh-keys
+az aks create --resource-group $RG --name gopherconk8s --agent-count 2 --generate-ssh-keys

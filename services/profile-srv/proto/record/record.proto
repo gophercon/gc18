@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+service Record {
+        rpc Create(CreateRequest) returns (CreateResponse) {}
+        rpc Read(ReadRequest) returns (ReadResponse) {}
+        rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+        rpc Update(UpdateRequest) returns (UpdateResponse) {}
+        rpc Search(SearchRequest) returns (SearchResponse) {}
+}
+
+message Profile {
+	string id = 1;		// uuid
+	string name = 2;	// alphanumeric user or org
+	string owner = 3;	// alphanumeric user
+	int64 type = 4;	// {user, org}
+        string displayName = 6;
+	string blurb = 7;	// description
+	string url = 8;		// personal url
+	string location = 9;	// london
+	int64 created = 10;	// unix
+	int64 updated = 11;	// unix
+}
+
+message CreateRequest {
+	Profile profile = 1;
+}
+
+message CreateResponse {
+}
+
+message DeleteRequest {
+	string id = 1;
+}
+
+message DeleteResponse {
+}
+
+message ReadRequest {
+	string id = 1;
+}
+
+message ReadResponse {
+	Profile profile = 1;
+}
+
+message UpdateRequest {
+	Profile profile = 1;
+}
+
+message UpdateResponse {
+}
+
+message SearchRequest {
+	string name = 1; 
+	string owner = 2; 
+	int64 limit = 3;
+	int64 offset = 4;
+}
+
+message SearchResponse {
+	repeated Profile profiles = 1;
+}

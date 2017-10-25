@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"context"
 	"strings"
 
 	"github.com/gobuffalo/buffalo"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	olog "github.com/opentracing/opentracing-go/log"
+
+	"github.com/micro/go-micro/metadata"
 )
 
 var tracer opentracing.Tracer
@@ -42,6 +45,7 @@ func OpenTracing(tr opentracing.Tracer) buffalo.MiddlewareFunc {
 				ext.HTTPStatusCode.Set(sp, uint16(br.Status))
 			}
 			sp.Finish()
+
 			return err
 		}
 	}
@@ -92,4 +96,13 @@ func ChildSpan(opname string, c buffalo.Context) opentracing.Span {
 func operation(s string) string {
 	chunks := strings.Split(s, ".")
 	return chunks[len(chunks)-1]
+}
+func MetadataContext(c buffalo.Context) context.Context {
+	sp := SpanFromContext(c)
+	md := metadata.Metadata{}
+	if err := sp.Tracer().Inject(sp.Context(), opentracing.TextMap, opentracing.TextMapCarrier(md)); err != nil {
+		return c
+	}
+	ctx := metadata.NewContext(c, md)
+	return ctx
 }

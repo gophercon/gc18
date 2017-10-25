@@ -4,20 +4,26 @@ import (
 	"io"
 	"log"
 
-	"github.com/gobuffalo/envy"
-
-	"github.com/gophercon/gc18/gophercon/actions"
-
+	proto "github.com/gophercon/gc18/services/config-srv/proto/config"
+	"github.com/micro/cli"
+	"github.com/micro/go-micro"
 	opentracing "github.com/opentracing/opentracing-go"
 	jaeger "github.com/uber/jaeger-client-go"
+
+	"github.com/gophercon/gc18/services/config-srv/config"
+	"github.com/gophercon/gc18/services/config-srv/handler"
+	mot "github.com/micro/go-plugins/wrapper/trace/opentracing"
+
+	// db
+	"github.com/gophercon/gc18/services/config-srv/db"
+	"github.com/gophercon/gc18/services/config-srv/db/mysql"
+
 	jaegercfg "github.com/uber/jaeger-client-go/config"
 	jaegerlog "github.com/uber/jaeger-client-go/log"
 	"github.com/uber/jaeger-lib/metrics"
 )
 
-// ServiceName is the string name of the service, since
-// it is used in multiple places, it's an exported Constant
-const ServiceName = "gophercon.web"
+const ServiceName = "gophercon.srv.config"
 
 func main() {
 
@@ -27,12 +33,45 @@ func main() {
 	}
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
+	service := micro.NewService(
+		micro.Name(ServiceName),
+		micro.Version("latest"),
 
-	port := envy.Get("PORT", "3000")
-	actions.Tracer = tracer
-	app := actions.App()
+		micro.Flags(
+			cli.StringFlag{
+				Name:   "database_url",
+				EnvVar: "DATABASE_URL",
+				Usage:  "The database URL e.g root@tcp(127.0.0.1:3306)/config",
+			},
+		),
+		micro.WrapClient(mot.NewClientWrapper(tracer)),
+		micro.WrapHandler(mot.NewHandlerWrapper(tracer)),
+		// Add for MySQL configuration
+		micro.Action(func(c *cli.Context) {
+			if len(c.String("database_url")) > 0 {
+				mysql.Url = c.String("database_url")
+			}
+		}),
+	)
 
-	log.Fatal(app.Start(port))
+	service.Init()
+
+	proto.RegisterConfigHandler(service.Server(), new(handler.Config))
+
+	// subcriber to watches
+	service.Server().Subscribe(service.Server().NewSubscriber(config.WatchTopic, config.Watcher))
+
+	if err := config.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := db.Init(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 func initTracer() (opentracing.Tracer, io.Closer, error) {
 	cfg := jaegercfg.Configuration{

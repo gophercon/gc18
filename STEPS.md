@@ -55,4 +55,4 @@ Step 5: deploy website
 ```
     kubectl apply -f kubernetes/website/*
 ```
-    
+Step 6: create mysql database in azure portal

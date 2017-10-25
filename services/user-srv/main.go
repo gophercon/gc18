@@ -4,10 +4,14 @@ import (
 	"io"
 	"log"
 
-	"github.com/gobuffalo/envy"
-
-	"github.com/gophercon/gc18/gophercon/actions"
-
+	"github.com/gophercon/gc18/services/user-srv/db"
+	"github.com/gophercon/gc18/services/user-srv/handler"
+	proto "github.com/gophercon/gc18/services/user-srv/proto/account"
+	"github.com/micro/cli"
+	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/client"
+	"github.com/micro/go-micro/server"
+	mot "github.com/micro/go-plugins/wrapper/trace/opentracing"
 	opentracing "github.com/opentracing/opentracing-go"
 	jaeger "github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
@@ -15,9 +19,7 @@ import (
 	"github.com/uber/jaeger-lib/metrics"
 )
 
-// ServiceName is the string name of the service, since
-// it is used in multiple places, it's an exported Constant
-const ServiceName = "gophercon.web"
+const ServiceName = "gophercon.srv.user"
 
 func main() {
 
@@ -28,12 +30,41 @@ func main() {
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 
-	port := envy.Get("PORT", "3000")
-	actions.Tracer = tracer
-	app := actions.App()
+	service := micro.NewService(
+		micro.Name(ServiceName),
+		micro.Flags(
+			cli.StringFlag{
+				Name:   "database_url",
+				EnvVar: "DATABASE_URL",
+				Usage:  "The database URL e.g root@tcp(127.0.0.1:3306)/user",
+			},
+		),
+		micro.WrapClient(mot.NewClientWrapper(tracer)),
+		micro.WrapHandler(mot.NewHandlerWrapper(tracer)),
 
-	log.Fatal(app.Start(port))
+		micro.Action(func(c *cli.Context) {
+			if len(c.String("database_url")) > 0 {
+				db.Url = c.String("database_url")
+			}
+		}),
+	)
+	client.DefaultClient = client.NewClient(
+		client.Wrap(
+			mot.NewClientWrapper(tracer)),
+	)
+	server.DefaultServer = server.NewServer(
+		server.WrapHandler(mot.NewHandlerWrapper(tracer)),
+	)
+	service.Init()
+	db.Init()
+
+	proto.RegisterAccountHandler(service.Server(), new(handler.Account))
+
+	if err := service.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
+
 func initTracer() (opentracing.Tracer, io.Closer, error) {
 	cfg := jaegercfg.Configuration{
 		Sampler: &jaegercfg.SamplerConfig{
